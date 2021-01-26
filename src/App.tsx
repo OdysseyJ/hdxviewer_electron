@@ -11,7 +11,7 @@ const Hello = () => {
       </div>
       <h1>electron-react-boilerplate</h1>
       <div className="Hello">
-        <BarChart></BarChart>
+        <BarChart />
       </div>
     </div>
   );
