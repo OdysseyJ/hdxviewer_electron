@@ -4,6 +4,7 @@ import {
   shell,
   BrowserWindow,
   MenuItemConstructorOptions,
+  dialog,
 } from 'electron';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
@@ -28,8 +29,8 @@ export default class MenuBuilder {
 
     const template =
       process.platform === 'darwin'
-        ? this.buildDarwinTemplate()
-        : this.buildDefaultTemplate();
+        ? this.buildDarwinTemplate(this.mainWindow)
+        : this.buildDefaultTemplate(this.mainWindow);
 
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
@@ -52,7 +53,7 @@ export default class MenuBuilder {
     });
   }
 
-  buildDarwinTemplate(): MenuItemConstructorOptions[] {
+  buildDarwinTemplate(mainWindow: BrowserWindow): MenuItemConstructorOptions[] {
     const subMenuAbout: DarwinMenuItemConstructorOptions = {
       label: 'Electron',
       submenu: [
@@ -157,7 +158,17 @@ export default class MenuBuilder {
         {
           label: 'Learn More',
           click() {
-            shell.openExternal('https://electronjs.org');
+            dialog
+              .showOpenDialog({ properties: ['openFile'] })
+              .then(function (file) {
+                if (!file.canceled) {
+                  mainWindow.webContents.send('FILE_OPEN', file.filePaths);
+                }
+                return '';
+              })
+              .catch((e) => {
+                console.log(e);
+              });
           },
         },
         {
@@ -192,7 +203,7 @@ export default class MenuBuilder {
     return [subMenuAbout, subMenuEdit, subMenuView, subMenuWindow, subMenuHelp];
   }
 
-  buildDefaultTemplate() {
+  buildDefaultTemplate(mainWindow: BrowserWindow) {
     const templateDefault = [
       {
         label: '&File',
