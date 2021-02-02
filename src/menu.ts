@@ -160,7 +160,7 @@ export default class MenuBuilder {
           click() {
             dialog
               .showOpenDialog({ properties: ['openFile'] })
-              .then(function (file) {
+              .then((file) => {
                 if (!file.canceled) {
                   mainWindow.webContents.send('FILE_OPEN', file.filePaths);
                 }

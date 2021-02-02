@@ -1,25 +1,22 @@
 import React from 'react';
 import c3 from 'c3';
-import BarChartPresenter from './BarChart.presenter';
+import LineChartPresenter from './LineChart.presenter';
 
-const BarChartContainer: React.FC = () => {
+const LineChartContainer: React.FC = () => {
   React.useEffect(() => {
     c3.generate({
-      bindto: '#chart',
+      bindto: '#chart_line',
       data: {
         columns: [
           ['data1', 30, 200, 100, 400, 150, 250],
           ['data2', 50, 20, 10, 40, 15, 25],
         ],
-        type: 'bar',
-        types: {
-          data1: 'spline',
-        },
+        type: 'line',
       },
     });
   }, []);
 
-  return <BarChartPresenter />;
+  return <LineChartPresenter />;
 };
 
-export default BarChartContainer;
+export default LineChartContainer;
